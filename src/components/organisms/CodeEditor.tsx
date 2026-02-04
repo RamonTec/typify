@@ -1,4 +1,4 @@
-import Editor, { type OnMount, type EditorProps } from "@monaco-editor/react";
+import Editor, { type EditorProps } from "@monaco-editor/react";
 import { cn } from "../../utils/cn";
 
 interface CodeEditorProps {
@@ -41,10 +41,6 @@ export const CodeEditor = ({
         }
     };
 
-    const handleEditorDidMount: OnMount = (editor, monaco) => {
-        // monaco.editor.defineTheme('my-theme', { ... })
-    };
-
     return (
         <div className={cn("relative h-full w-full overflow-hidden bg-transparent", className)}>
             <Editor
@@ -55,7 +51,6 @@ export const CodeEditor = ({
                 onChange={onChange}
                 theme="light"
                 options={editorOptions}
-                onMount={handleEditorDidMount}
                 loading={
                     <div className="flex h-full w-full items-center justify-center text-sm text-slate-400">
                         Initializing editor...
