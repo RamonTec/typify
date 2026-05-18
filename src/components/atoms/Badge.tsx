@@ -8,7 +8,7 @@ interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 export const Badge = ({ className, variant = "neutral", ...props }: BadgeProps) => {
-    const baseStyles = "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-sm ring-1 ring-inset transition-colors cursor-default";
+    const baseStyles = "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold uppercase tracking-wider shadow-sm ring-1 ring-inset transition-colors cursor-default sm:text-[10px]";
 
     const variants = {
         success: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
