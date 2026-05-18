@@ -14,7 +14,7 @@ const toPascalCase = (str: string): string => {
 };
 
 const getType = (value: any): string => {
-    if (value === null) return "any";
+    if (value === null) return "null";
     if (typeof value === "string") return "string";
     if (typeof value === "number") return "number";
     if (typeof value === "boolean") return "boolean";
@@ -37,13 +37,29 @@ export const jsonToTypeScript = (
 
     const interfaces = new Map<string, string>();
 
+    const visited = new WeakSet();
+
     const parseObject = (obj: any, name: string): string => {
+        if (typeof obj === "object" && obj !== null) {
+            if (visited.has(obj)) {
+                return "any"; 
+            }
+            visited.add(obj);
+        }
+
         const type = getType(obj);
 
         if (type === "array") {
             if (obj.length === 0) return "any[]";
-            const firstItemType = parseObject(obj[0], name);
-            return `${firstItemType}[]`;
+            
+            const elementTypes = obj.map((item: any) => parseObject(item, name));
+            const uniqueTypes = [...new Set(elementTypes)];
+            
+            if (uniqueTypes.length === 1) {
+                return `${uniqueTypes[0]}[]`;
+            } else {
+                return `(${uniqueTypes.join(" | ")})[]`;
+            }
         }
 
         if (type === "object" && obj !== null) {
@@ -66,9 +82,15 @@ export const jsonToTypeScript = (
             interfaceBody += `}`;
 
             interfaces.set(interfaceName, interfaceBody);
+            
+            visited.delete(obj);
             return interfaceName;
         }
 
+        if (typeof obj === "object" && obj !== null) {
+            visited.delete(obj);
+        }
+        
         return type;
     };
 

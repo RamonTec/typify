@@ -33,13 +33,29 @@ export const jsonToZod = (
 
     const schemas = new Map<string, string>();
 
+    const visited = new WeakSet();
+
     const parseObject = (obj: any, name: string): string => {
+        if (typeof obj === "object" && obj !== null) {
+            if (visited.has(obj)) {
+                return "z.any()";
+            }
+            visited.add(obj);
+        }
+
         const type = getZodType(obj);
 
         if (type === "array") {
             if (obj.length === 0) return "z.array(z.any())";
-            const firstItemSchema = parseObject(obj[0], name);
-            return `z.array(${firstItemSchema})`;
+            
+            const elementSchemas = obj.map((item: any) => parseObject(item, name));
+            const uniqueSchemas = [...new Set(elementSchemas)];
+            
+            if (uniqueSchemas.length === 1) {
+                return `z.array(${uniqueSchemas[0]})`;
+            } else {
+                return `z.array(z.union([${uniqueSchemas.join(", ")}]))`;
+            }
         }
 
         if (type === "object" && obj !== null) {
@@ -62,9 +78,15 @@ export const jsonToZod = (
             schemaBody += `\nexport type ${baseName} = z.infer<typeof ${schemaName}>;`;
 
             schemas.set(schemaName, schemaBody);
+            
+            visited.delete(obj);
             return schemaName;
         }
 
+        if (typeof obj === "object" && obj !== null) {
+            visited.delete(obj);
+        }
+        
         return type;
     };
 
