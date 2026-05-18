@@ -1,0 +1,44 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "age": 30,
+      "isActive": true,
+      "preferences": {
+        "theme": "dark",
+        "notifications": true
+      },
+      "tags": ["developer", "javascript", "typescript"],
+      "scores": [95, 87, 92],
+      "metadata": null,
+      "mixedArray": ["string", 42, true, null]
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane@example.com",
+      "age": 25,
+      "isActive": false,
+      "preferences": {
+        "theme": "light",
+        "notifications": false
+      },
+      "tags": ["designer", "ui", "ux"],
+      "scores": [98, 95, 89],
+      "metadata": {
+        "lastLogin": "2023-01-15"
+      },
+      "mixedArray": [100, "another string"]
+    }
+  ],
+  "settings": {
+    "version": "1.0.0",
+    "features": ["feature1", "feature2"],
+    "limits": {
+      "maxUsers": 100,
+      "maxStorage": "1GB"
+    }
+  }
+}

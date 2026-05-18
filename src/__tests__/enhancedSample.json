@@ -1,0 +1,49 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "roles": ["admin", "user"],
+      "scores": [95, 87, 92],
+      "preferences": {
+        "theme": "dark",
+        "notifications": true,
+        "language": "en"
+      },
+      "metadata": null,
+      "mixedArray": ["string", 42, true, null],
+      "tags": [
+        {"name": "developer", "priority": 1},
+        {"name": "designer", "priority": 2}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane@example.com",
+      "roles": ["user"],
+      "scores": [98, 95, 89],
+      "preferences": {
+        "theme": "light",
+        "notifications": false,
+        "language": "es"
+      },
+      "metadata": {
+        "lastLogin": "2023-01-15"
+      },
+      "mixedArray": [100, "another string"],
+      "tags": [
+        {"name": "manager", "priority": 1}
+      ]
+    }
+  ],
+  "settings": {
+    "version": "1.0.0",
+    "features": ["feature1", "feature2"],
+    "limits": {
+      "maxUsers": 100,
+      "maxStorage": "1GB"
+    }
+  }
+}

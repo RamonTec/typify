@@ -1,0 +1,8 @@
+{
+  "mixedArray": ["string", 42, true, null],
+  "stringArray": ["a", "b", "c"],
+  "numberArray": [1, 2, 3],
+  "nested": {
+    "mixed": ["text", 123, false]
+  }
+}

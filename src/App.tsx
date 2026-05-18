@@ -6,16 +6,30 @@ import { Badge } from "./components/atoms/Badge";
 import { EmptyState } from "./components/molecules/EmptyState";
 import { jsonToTypeScript, type OutputMode } from "./services/converter";
 import { formatJson, minifyJson } from "./services/formatter";
-import { FileJson, Code2, ClipboardPaste, AlignLeft, Minimize2, Trash2 } from "lucide-react";
+import { FileJson, Code2, ClipboardPaste, AlignLeft, Minimize2, Trash2, Moon, Sun, FileUp, Download, Undo, Redo } from "lucide-react";
 import { SegmentedControl } from "./components/molecules/SegmentedControl";
 import { jsonToZod } from "./services/zodGenerator";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { ThemeToggle } from "./components/atoms/ThemeToggle";
+import { useJsonValidation } from "./hooks/useJsonValidation";
+import { ImportMenu } from "./components/molecules/ImportMenu";
+import { ExportMenu } from "./components/molecules/ExportMenu";
+import { useHistory } from "./hooks/useHistory";
+import { Skeleton } from "./components/atoms/Skeleton";
 
 function App() {
-  const [jsonInput, setJsonInput] = useState<string>("");
+  const {
+    value: jsonInput,
+    setValue: setJsonInput,
+    undo,
+    redo,
+    canUndo,
+    canRedo
+  } = useHistory<string>("");
   const [tsOutput, setTsOutput] = useState<string>("");
-  const [isValid, setIsValid] = useState<boolean>(true);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [outputMode, setOutputMode] = useState<OutputMode>('interface');
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const { errors, isValid } = useJsonValidation(jsonInput);
 
   const handleFormat = () => {
     if (!jsonInput) return;
@@ -46,12 +60,34 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!jsonInput.trim()) {
-        return;
-      }
+  const handleFileImport = (content: string) => {
+    setJsonInput(content);
+  };
 
+  const handleUrlImport = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const content = await response.text();
+      JSON.parse(content);
+      setJsonInput(content);
+    } catch (err) {
+      throw new Error('Failed to fetch or parse JSON');
+    }
+  };
+
+  useEffect(() => {
+    if (!jsonInput.trim()) {
+      setTsOutput("");
+      setIsProcessing(false);
+      return;
+    }
+
+    setIsProcessing(true);
+    
+    const timer = setTimeout(() => {
       try {
         let result = "";
 
@@ -65,28 +101,36 @@ function App() {
         }
 
         setTsOutput(result);
-        setIsValid(true);
-        setErrorMsg(null);
       } catch (err) {
-        setIsValid(false);
-        if (err instanceof Error) setErrorMsg(err.message);
+        setTsOutput("");
+        console.error("Error generating TypeScript:", err);
+      } finally {
+        setIsProcessing(false);
       }
     }, 500);
 
-    return () => clearTimeout(timer);
-  }, [jsonInput, outputMode]);
+    return () => {
+      clearTimeout(timer);
+      setIsProcessing(false);
+    };
+  }, [jsonInput, outputMode, isValid]);
 
   return (
-    <MainLayout
+    <ThemeProvider>
+      <MainLayout
       header={
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:h-16">
           <div className="flex items-center gap-3">
             <h1 className="text-xl font-bold tracking-tight text-indigo-600">Typify</h1>
             <Badge variant="success">Beta</Badge>
           </div>
-          <Button variant="secondary" size="sm" onClick={() => window.open('https://buymeacoffee.com', '_blank')}>
-            ☕ Buy me a Coffee
-          </Button>
+          <div className="flex items-center gap-2">
+            <ImportMenu onFileImport={handleFileImport} onUrlImport={handleUrlImport} />
+            <ThemeToggle />
+            <Button variant="secondary" size="sm" onClick={() => window.open('https://buymeacoffee.com', '_blank')}>
+              ☕ Buy me a Coffee
+            </Button>
+          </div>
         </div>
       }
 
@@ -100,6 +144,32 @@ function App() {
             </div>
 
             <div className="flex items-center gap-1">
+              {jsonInput && (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={undo}
+                    disabled={!canUndo}
+                    title="Undo"
+                  >
+                    <Undo className="h-4 w-4 text-slate-600" />
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={redo}
+                    disabled={!canRedo}
+                    title="Redo"
+                  >
+                    <Redo className="h-4 w-4 text-slate-600" />
+                  </Button>
+
+                  <div className="mx-1 h-4 w-px bg-slate-200" />
+                </>
+              )}
+
               {jsonInput && isValid && (
                 <>
                   <Button
@@ -162,13 +232,7 @@ function App() {
               </div>
             )}
 
-            {!isValid && errorMsg && (
-              <div className="absolute bottom-4 left-4 right-4 z-20 animate-in slide-in-from-bottom-2">
-                <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200 shadow-sm flex items-center gap-2">
-                  <span className="font-bold">Error:</span> {errorMsg}
-                </div>
-              </div>
-            )}
+            
           </div>
         </div>
       }
@@ -191,19 +255,24 @@ function App() {
               />
             </div>
 
-            {tsOutput && (
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => navigator.clipboard.writeText(tsOutput)}
-              >
-                Copiar
-              </Button>
-            )}
+            {tsOutput && <ExportMenu tsOutput={tsOutput} outputMode={outputMode} />}
           </div>
 
           <div className="flex-1 relative">
-            {tsOutput ? (
+            {isProcessing ? (
+              <div className="flex h-full w-full flex-col bg-slate-50 p-4">
+                <div className="mb-4 flex items-center justify-between">
+                  <Skeleton className="h-6 w-24" />
+                  <Skeleton className="h-8 w-20" />
+                </div>
+                <div className="space-y-3">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-5/6" />
+                  <Skeleton className="h-4 w-4/6" />
+                  <Skeleton className="h-4 w-3/6" />
+                </div>
+              </div>
+            ) : tsOutput ? (
               <CodeEditor
                 language="typescript"
                 value={tsOutput}
@@ -224,6 +293,7 @@ function App() {
         </div>
       }
     />
+    </ThemeProvider>
   );
 }
 
