@@ -21,7 +21,7 @@ export const MainLayout = ({
             <header className="sticky top-0 z-50 w-full border-b border-white/20 bg-white/70 backdrop-blur-xl shadow-sm">
                 {header}
             </header>
-            <main className="container mx-auto flex flex-1 flex-col gap-6 p-4 md:flex-row md:p-6 lg:p-8">
+            <main className="container mx-auto flex flex-1 flex-col gap-4 p-4 sm:gap-6 sm:p-4 md:flex-row md:p-6 lg:p-8">
                 <section className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-white/20 bg-white/60 shadow-xl backdrop-blur-md transition-all hover:shadow-2xl">
                     <div className="flex h-full flex-col">
                         {leftPanel}
@@ -45,7 +45,7 @@ export const MainLayout = ({
 
             {adSlot && (
                 <div className="block border-t border-white/10 bg-white/80 p-4 backdrop-blur-lg xl:hidden">
-                    <div className="mx-auto max-w-[320px]">
+                    <div className="mx-auto max-w-full px-4">
                         {adSlot}
                     </div>
                 </div>
