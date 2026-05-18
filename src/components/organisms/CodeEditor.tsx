@@ -1,5 +1,6 @@
 import Editor, { type EditorProps } from "@monaco-editor/react";
 import { cn } from "../../utils/cn";
+import { useTheme } from "../../contexts/ThemeContext";
 
 interface CodeEditorProps {
     value: string;
@@ -16,10 +17,11 @@ export const CodeEditor = ({
     readOnly = false,
     className,
 }: CodeEditorProps) => {
+    const { theme } = useTheme();
 
     const editorOptions: EditorProps["options"] = {
         minimap: { enabled: false },
-        fontSize: 14,
+        fontSize: 16,
         lineNumbers: "on",
         roundedSelection: false,
         scrollBeyondLastLine: false,
@@ -38,7 +40,7 @@ export const CodeEditor = ({
         },
         guides: {
             indentation: false
-        }
+        },
     };
 
     return (
@@ -49,7 +51,7 @@ export const CodeEditor = ({
                 language={language}
                 value={value}
                 onChange={onChange}
-                theme="light"
+                theme={theme === "dark" ? "vs-dark" : "light"}
                 options={editorOptions}
                 loading={
                     <div className="flex h-full w-full items-center justify-center text-sm text-slate-400">
