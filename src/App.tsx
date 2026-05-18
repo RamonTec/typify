@@ -6,7 +6,7 @@ import { Badge } from "./components/atoms/Badge";
 import { EmptyState } from "./components/molecules/EmptyState";
 import { jsonToTypeScript, type OutputMode } from "./services/converter";
 import { formatJson, minifyJson } from "./services/formatter";
-import { FileJson, Code2, ClipboardPaste, AlignLeft, Minimize2, Trash2, Moon, Sun, FileUp, Download, Undo, Redo } from "lucide-react";
+import { FileJson, Code2, ClipboardPaste, AlignLeft, Minimize2, Trash2, Undo, Redo } from "lucide-react";
 import { SegmentedControl } from "./components/molecules/SegmentedControl";
 import { jsonToZod } from "./services/zodGenerator";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -29,14 +29,14 @@ function App() {
   const [tsOutput, setTsOutput] = useState<string>("");
   const [outputMode, setOutputMode] = useState<OutputMode>('interface');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const { errors, isValid } = useJsonValidation(jsonInput);
+  const { isValid } = useJsonValidation(jsonInput);
 
   const handleFormat = () => {
     if (!jsonInput) return;
     try {
       const formatted = formatJson(jsonInput);
       setJsonInput(formatted);
-    } catch (error) {
+    } catch  {
       console.error("JSON Inválido");
     }
   };
@@ -46,7 +46,7 @@ function App() {
     try {
       const minified = minifyJson(jsonInput);
       setJsonInput(minified);
-    } catch (error) {
+    } catch  {
       console.error("JSON Inválido");
     }
   };
@@ -55,7 +55,7 @@ function App() {
     try {
       const text = await navigator.clipboard.readText();
       setJsonInput(text);
-    } catch (err) {
+    } catch  {
       console.error("Permiso denegado para leer portapapeles");
     }
   };
@@ -73,7 +73,7 @@ function App() {
       const content = await response.text();
       JSON.parse(content);
       setJsonInput(content);
-    } catch (err) {
+    } catch  {
       throw new Error('Failed to fetch or parse JSON');
     }
   };
