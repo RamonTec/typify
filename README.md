@@ -1,4 +1,57 @@
-# React + TypeScript + Vite
+# Typify - JSON to TypeScript/Zod Schema Converter
+
+This tool converts JSON data into TypeScript interfaces/types and Zod validation schemas.
+
+## Features
+
+- Convert JSON to TypeScript interfaces or types
+- Generate Zod schemas for runtime validation
+- Real-time conversion as you type
+- Format and minify JSON
+- Copy to clipboard functionality
+
+## Enhanced Logic Features
+
+This version includes several logic enhancements:
+
+### 1. Union Type Detection
+Automatically detects mixed types in arrays and generates appropriate TypeScript unions and Zod unions:
+```typescript
+// Input: ["string", 42, true, null]
+// Output: (string | number | boolean | null)[]
+```
+
+### 2. Circular Reference Protection
+Prevents infinite loops when processing self-referencing objects.
+
+### 3. Improved Null Type Handling
+Null values are properly typed as `null` instead of `any`.
+
+### 4. Enhanced Array Processing
+Better handling of both homogeneous and heterogeneous arrays.
+
+## Development
+
+To run the development server:
+```bash
+npm run dev
+```
+
+To build for production:
+```bash
+npm run build
+```
+
+## Implementation Details
+
+See [LOGIC_ENHANCEMENTS.md](LOGIC_ENHANCEMENTS.md) for detailed documentation of the logic enhancements implemented.
+
+## Dependencies
+
+- React + TypeScript + Vite (base template)
+- Monaco Editor for code editing
+- Zod for schema validation
+- Tailwind CSS for styling
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
