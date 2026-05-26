@@ -6,7 +6,7 @@ import { Badge } from "./components/atoms/Badge";
 import { EmptyState } from "./components/molecules/EmptyState";
 import { jsonToTypeScript, type OutputMode } from "./services/converter";
 import { formatJson, minifyJson } from "./services/formatter";
-import { FileJson, Code2, ClipboardPaste, AlignLeft, Minimize2, Trash2, Undo, Redo } from "lucide-react";
+import { FileJson, Code2, ClipboardPaste, AlignLeft, Minimize2, Trash2, Undo, Redo, FileCode } from "lucide-react";
 import { SegmentedControl } from "./components/molecules/SegmentedControl";
 import { jsonToZod } from "./services/zodGenerator";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -16,6 +16,8 @@ import { ImportMenu } from "./components/molecules/ImportMenu";
 import { ExportMenu } from "./components/molecules/ExportMenu";
 import { useHistory } from "./hooks/useHistory";
 import { Skeleton } from "./components/atoms/Skeleton";
+import { javaToTypeScript } from "./services/javaToTypeScript";
+import { javaToZod } from "./services/javaToZod";
 
 function App() {
   const {
@@ -29,6 +31,7 @@ function App() {
   const [tsOutput, setTsOutput] = useState<string>("");
   const [outputMode, setOutputMode] = useState<OutputMode>('interface');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [inputMode, setInputMode] = useState<'json' | 'java'>('json');
   const { isValid } = useJsonValidation(jsonInput);
 
   const handleFormat = () => {
@@ -91,19 +94,27 @@ function App() {
       try {
         let result = "";
 
-        if (outputMode === 'zod') {
-          result = jsonToZod(jsonInput, { rootName: "Root" });
+        if (inputMode === 'java') {
+          if (outputMode === 'zod') {
+            result = javaToZod(jsonInput);
+          } else {
+            result = javaToTypeScript(jsonInput, { outputMode: outputMode });
+          }
         } else {
-          result = jsonToTypeScript(jsonInput, {
-            rootName: "Root",
-            outputMode: outputMode
-          });
+          if (outputMode === 'zod') {
+            result = jsonToZod(jsonInput, { rootName: "Root" });
+          } else {
+            result = jsonToTypeScript(jsonInput, {
+              rootName: "Root",
+              outputMode: outputMode
+            });
+          }
         }
 
         setTsOutput(result);
       } catch (err) {
         setTsOutput("");
-        console.error("Error generating TypeScript:", err);
+        console.error("Error generating output:", err);
       } finally {
         setIsProcessing(false);
       }
@@ -113,7 +124,7 @@ function App() {
       clearTimeout(timer);
       setIsProcessing(false);
     };
-  }, [jsonInput, outputMode, isValid]);
+  }, [jsonInput, outputMode, inputMode]);
 
   return (
     <ThemeProvider>
@@ -139,8 +150,16 @@ function App() {
           <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2 bg-white z-10">
 
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase text-slate-500">JSON</span>
-              {!isValid && <Badge variant="error">Error</Badge>}
+              <span className="text-xs font-semibold uppercase text-slate-500">Input</span>
+              <SegmentedControl
+                value={inputMode}
+                onChange={(val) => setInputMode(val as 'json' | 'java')}
+                options={[
+                  { label: 'JSON', value: 'json', icon: FileJson },
+                  { label: 'Java', value: 'java', icon: FileCode },
+                ]}
+              />
+              {inputMode === 'json' && !isValid && <Badge variant="error">Error</Badge>}
             </div>
 
             <div className="flex items-center gap-1">
@@ -219,9 +238,9 @@ function App() {
             {!jsonInput && (
               <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/50 backdrop-blur-[1px]">
                 <EmptyState
-                  icon={FileJson}
-                  title="Pega tu JSON aquí"
-                  description="Copia tu respuesta de API y pégala para generar los tipos."
+                  icon={inputMode === 'java' ? FileCode : FileJson}
+                  title={inputMode === 'java' ? "Pega tu clase Java aquí" : "Pega tu JSON aquí"}
+                  description={inputMode === 'java' ? "Copia tu clase DTO de Java para generar los tipos." : "Copia tu respuesta de API y pégala para generar los tipos."}
                   action={
                     <Button onClick={handlePasteFromClipboard} variant="primary" size="sm" className="gap-2">
                       <ClipboardPaste className="h-4 w-4" />
@@ -284,7 +303,7 @@ function App() {
                 <EmptyState
                   icon={Code2}
                   title="Esperando datos..."
-                  description="El código TypeScript generado aparecerá aquí automáticamente."
+                  description={inputMode === 'java' ? "El código TypeScript generado desde tu clase Java aparecerá aquí automáticamente." : "El código TypeScript generado aparecerá aquí automáticamente."}
                   className="opacity-60"
                 />
               </div>
