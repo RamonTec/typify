@@ -5,7 +5,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 interface CodeEditorProps {
     value: string;
     onChange?: (value: string | undefined) => void;
-    language?: "json" | "typescript";
+    language?: "json" | "typescript" | "plaintext";
     readOnly?: boolean;
     className?: string;
 }

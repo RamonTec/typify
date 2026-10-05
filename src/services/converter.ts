@@ -1,5 +1,5 @@
 
-export type OutputMode = 'interface' | 'type' | 'zod';
+export type OutputMode = 'interface' | 'type' | 'zod' | 'compare' | 'mermaid' | 'deserialize';
 
 interface ConversionConfig {
     rootName: string;
