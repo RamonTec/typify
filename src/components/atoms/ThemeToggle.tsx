@@ -11,8 +11,8 @@ export const ThemeToggle = () => {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-      title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+      aria-label={theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
+      title={theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
     >
       {theme === 'light' ? (
         <Moon className="h-5 w-5 text-slate-600" />

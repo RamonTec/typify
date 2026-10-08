@@ -3,16 +3,16 @@ import { cn } from "../../utils/cn";
 
 interface MainLayoutProps {
     header: React.ReactNode;
-    leftPanel: React.ReactNode;
-    rightPanel: React.ReactNode;
+    nav: React.ReactNode;
+    children: React.ReactNode;
     adSlot?: React.ReactNode;
     className?: string;
 }
 
 export const MainLayout = ({
     header,
-    leftPanel,
-    rightPanel,
+    nav,
+    children,
     adSlot,
     className,
 }: MainLayoutProps) => {
@@ -22,17 +22,11 @@ export const MainLayout = ({
                 {header}
             </header>
             <main className="container mx-auto flex flex-1 flex-col gap-4 p-4 sm:gap-6 sm:p-4 md:flex-row md:p-6 lg:p-8">
-                <section className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-white/20 bg-white/60 shadow-xl backdrop-blur-md transition-all hover:shadow-2xl">
-                    <div className="flex h-full flex-col">
-                        {leftPanel}
-                    </div>
-                </section>
+                <aside className="md:w-60 md:shrink-0">
+                    <div className="md:sticky md:top-24">{nav}</div>
+                </aside>
 
-                <section className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-white/20 bg-white/60 shadow-xl backdrop-blur-md transition-all hover:shadow-2xl">
-                    <div className="flex h-full flex-col">
-                        {rightPanel}
-                    </div>
-                </section>
+                <div className="flex min-w-0 flex-1 flex-col">{children}</div>
 
                 {adSlot && (
                     <aside className="hidden w-[300px] xl:block">

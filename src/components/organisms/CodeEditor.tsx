@@ -55,7 +55,7 @@ export const CodeEditor = ({
                 options={editorOptions}
                 loading={
                     <div className="flex h-full w-full items-center justify-center text-sm text-slate-400">
-                        Initializing editor...
+                        Iniciando editor...
                     </div>
                 }
             />

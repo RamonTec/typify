@@ -26,7 +26,7 @@ export const ImportMenu: React.FC<ImportMenuProps> = ({ onFileImport, onUrlImpor
         onFileImport(content);
         setIsOpen(false);
       } catch (err) {
-        setError('Invalid JSON file');
+        setError('El archivo no contiene JSON válido');
       }
     };
     reader.readAsText(file);
@@ -43,7 +43,7 @@ export const ImportMenu: React.FC<ImportMenuProps> = ({ onFileImport, onUrlImpor
       setIsOpen(false);
       setUrl('');
     } catch (err) {
-      setError('Failed to fetch JSON from URL');
+      setError('No se pudo obtener un JSON válido desde la URL');
     } finally {
       setIsImporting(false);
     }
@@ -55,26 +55,26 @@ export const ImportMenu: React.FC<ImportMenuProps> = ({ onFileImport, onUrlImpor
         variant="ghost" 
         size="sm" 
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Import JSON"
-        title="Import JSON"
+        aria-label="Importar JSON"
+        title="Importar JSON"
       >
         <FileUp className="h-4 w-4" />
-        <span className="ml-2">Import</span>
+        <span className="ml-2">Importar</span>
       </Button>
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-64 rounded-lg border border-slate-200 bg-white shadow-lg z-50 dark:border-slate-700 dark:bg-slate-800">
           <div className="p-4">
-            <h3 className="text-sm font-medium mb-3 text-slate-900 dark:text-slate-100">Import JSON</h3>
+            <h3 className="text-sm font-medium mb-3 text-slate-900 dark:text-slate-100">Importar JSON</h3>
             
             <div className="space-y-3">
               <div>
                 <label className="block text-xs font-medium text-slate-700 mb-1 dark:text-slate-300">
-                  From File
+                  Desde archivo
                 </label>
                 <label className="flex items-center justify-center w-full px-3 py-2 border border-dashed border-slate-300 rounded-md cursor-pointer hover:bg-slate-50 dark:border-slate-600 dark:hover:bg-slate-700">
                   <FileUp className="h-4 w-4 text-slate-500 dark:text-slate-400" />
-                  <span className="ml-2 text-sm text-slate-600 dark:text-slate-300">Choose JSON file</span>
+                  <span className="ml-2 text-sm text-slate-600 dark:text-slate-300">Elegir archivo JSON</span>
                   <input 
                     type="file" 
                     className="hidden" 
@@ -86,7 +86,7 @@ export const ImportMenu: React.FC<ImportMenuProps> = ({ onFileImport, onUrlImpor
 
               <div>
                 <label className="block text-xs font-medium text-slate-700 mb-1 dark:text-slate-300">
-                  From URL
+                  Desde URL
                 </label>
                 <div className="flex gap-2">
                   <input
