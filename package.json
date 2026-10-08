@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "test": "jest --config jest.config.cjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sdd": "node scripts/sdd.mjs"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
