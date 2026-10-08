@@ -40,10 +40,10 @@ export type CompareResult =
   | { status: 'success'; isValid: boolean; differences: Difference[]; expectedTs: string; expectedZod: string };
 
 export const DIFF_LABELS: Record<DiffType, string> = {
-  missing: 'Missing',
-  extra: 'Extra',
-  type_mismatch: 'Type Mismatch',
-  null_mismatch: 'Null Mismatch',
+  missing: 'Falta',
+  extra: 'Sobra',
+  type_mismatch: 'Tipo distinto',
+  null_mismatch: 'Null inesperado',
 };
 
 function getKind(value: unknown): string {
@@ -70,7 +70,7 @@ function compareNodes(
       type: 'null_mismatch',
       expected: describeType(actual),
       actual: 'null',
-      message: `Expected null but got ${describeType(actual)}`,
+      message: `Se esperaba null y se obtuvo ${describeType(actual)}`,
     });
     return;
   }
@@ -81,7 +81,7 @@ function compareNodes(
       type: 'null_mismatch',
       expected: describeType(expected),
       actual: 'null',
-      message: `Expected ${describeType(expected)} but got null`,
+      message: `Se esperaba ${describeType(expected)} y se obtuvo null`,
     });
     return;
   }
@@ -99,7 +99,7 @@ function compareNodes(
       type: 'type_mismatch',
       expected: describeType(expected),
       actual: describeType(actual),
-      message: `Expected ${describeType(expected)} but got ${describeType(actual)}`,
+      message: `Se esperaba ${describeType(expected)} y se obtuvo ${describeType(actual)}`,
     });
     return;
   }
@@ -117,14 +117,14 @@ function compareNodes(
           path: elemPath,
           type: 'extra',
           actual: describeType(actualArr[i]),
-          message: `Extra element at index ${i}`,
+          message: `Elemento extra en el índice ${i}`,
         });
       } else if (i >= actualArr.length) {
         differences.push({
           path: elemPath,
           type: 'missing',
           expected: describeType(expectedArr[i]),
-          message: `Missing element at index ${i}`,
+          message: `Falta el elemento en el índice ${i}`,
         });
       } else {
         compareNodes(expectedArr[i], actualArr[i], elemPath, differences);
@@ -146,14 +146,14 @@ function compareNodes(
           path: keyPath,
           type: 'extra',
           actual: describeType(actualObj[key]),
-          message: `Unexpected field "${key}"`,
+          message: `Campo inesperado "${key}"`,
         });
       } else if (!(key in actualObj)) {
         differences.push({
           path: keyPath,
           type: 'missing',
           expected: describeType(expectedObj[key]),
-          message: `Missing field "${key}"`,
+          message: `Falta el campo "${key}"`,
         });
       } else {
         compareNodes(expectedObj[key], actualObj[key], keyPath, differences);

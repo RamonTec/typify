@@ -43,14 +43,14 @@ function DiffComparison({ diff }: { diff: Difference }) {
     case "missing":
       return (
         <span className="text-xs font-mono text-rose-600">
-          Expected:{" "}
+          Esperado:{" "}
           <span className="font-semibold">{diff.expected}</span>
         </span>
       );
     case "extra":
       return (
         <span className="text-xs font-mono text-amber-600">
-          Found:{" "}
+          Encontrado:{" "}
           <span className="font-semibold">{diff.actual}</span>
         </span>
       );
@@ -93,7 +93,7 @@ const DiffEntry = memo(function DiffEntry({
       }}
     >
       <div className="mb-1 font-mono text-xs text-slate-500">
-        {diff.path || "(root)"}
+        {diff.path || "(raíz)"}
       </div>
       <div className="flex items-center gap-2">
         <DiffIcon type={diff.type} />
@@ -147,18 +147,18 @@ export const CompareReport = memo(function CompareReport({
       <div className={cn("flex h-full flex-col", className)}>
         <div className="border-b border-slate-200 px-4 py-3 bg-white">
           <h3 className="text-sm font-semibold text-slate-700">
-            Comparison Report
+            Informe de comparación
           </h3>
         </div>
         <div className="flex flex-1 items-center justify-center p-6">
           <div className="text-center">
             <FileWarning className="mx-auto h-8 w-8 text-red-400" />
             <p className="mt-2 text-sm font-medium text-red-600">
-              Invalid JSON
+              JSON inválido
             </p>
             <p className="mt-1 text-xs text-slate-500">{result.error}</p>
             <p className="mt-2 text-xs text-slate-400">
-              Make sure both inputs contain valid JSON.
+              Revisa que las dos entradas contengan JSON válido.
             </p>
           </div>
         </div>
@@ -177,33 +177,31 @@ export const CompareReport = memo(function CompareReport({
 
       <div className="border-b border-slate-200 bg-white px-4 py-3">
         <h3 className="text-sm font-semibold text-slate-700">
-          Comparison Report
+          Informe de comparación
         </h3>
         {isValid ? (
           <div className="mt-2 flex items-center gap-2">
             <CheckCircle className="h-4 w-4 text-emerald-500" />
             <span className="text-xs font-medium text-emerald-600">
-              All fields match
+              Todos los campos coinciden
             </span>
           </div>
         ) : (
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
             {missing.length > 0 && (
-              <Badge variant="error">{missing.length} missing</Badge>
+              <Badge variant="error">{missing.length} {missing.length === 1 ? "falta" : "faltan"}</Badge>
             )}
             {extra.length > 0 && (
-              <Badge variant="warning">{extra.length} extra</Badge>
+              <Badge variant="warning">{extra.length} {extra.length === 1 ? "sobra" : "sobran"}</Badge>
             )}
             {typeMismatches.length > 0 && (
               <Badge variant="warning">
-                {typeMismatches.length} type{" "}
-                {typeMismatches.length === 1 ? "mismatch" : "mismatches"}
+                {typeMismatches.length} con tipo distinto
               </Badge>
             )}
             {nullMismatches.length > 0 && (
               <Badge variant="error">
-                {nullMismatches.length} null{" "}
-                {nullMismatches.length === 1 ? "mismatch" : "mismatches"}
+                {nullMismatches.length} con null inesperado
               </Badge>
             )}
           </div>
@@ -215,10 +213,10 @@ export const CompareReport = memo(function CompareReport({
           <div className="flex h-full flex-col items-center justify-center gap-2 text-slate-400">
             <CheckCircle className="h-10 w-10 text-emerald-400" />
             <span className="text-sm font-medium">
-              Payload matches expected DTO
+              El payload coincide con el DTO esperado
             </span>
             <span className="text-xs text-slate-400">
-              No structural differences found
+              No hay diferencias de estructura
             </span>
           </div>
         ) : (
@@ -243,12 +241,12 @@ export const CompareReport = memo(function CompareReport({
                   isExpanded && "rotate-180",
                 )}
               />
-              Generated Types
+              Tipos generados
             </span>
             <span className="text-xs text-slate-400">
               {differences.length === 0
-                ? "Reference"
-                : `${differences.length} difference${differences.length === 1 ? "" : "s"}`}
+                ? "Referencia"
+                : `${differences.length} ${differences.length === 1 ? "diferencia" : "diferencias"}`}
             </span>
           </button>
 

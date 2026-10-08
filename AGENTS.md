@@ -1,3 +1,27 @@
+# Typify
+
+Conversor JSON / Java / JWT → TypeScript, Zod, Mermaid y deserializadores. React 19 + TypeScript + Vite + Tailwind 4 + Zod 4.
+
+## Comandos
+- `npm run dev` — servidor de desarrollo
+- `npm run build` — type-check + build
+- `npm run lint` — ESLint
+- `npm test` — Jest (`src/__tests__/**/*.test.ts`)
+- `npm run sdd -- status` — estado de las features SDD
+
+## Flujo de trabajo: Spec-Driven Development
+
+Las features nuevas siguen SDD. Guía: `docs/sdd/README.md`. Principios no negociables: `docs/sdd/constitution.md`.
+
+`/sdd` (estado) → `/sdd-spec` → `/sdd-plan` → `/sdd-tasks` → `/sdd-implement` → `/sdd-verify`
+
+- Cada feature vive en `docs/features/NNN-slug/` con `spec.md`, `plan.md`, `tasks.md` y `checklist.md`.
+- No se escribe código de producción sin `spec.md` y `plan.md` aprobados (salvo cambios triviales).
+- Entre fases, pide aprobación explícita al usuario. Nunca marques un artefacto como `aprobado` por tu cuenta.
+- La lógica de cada fase está en `.claude/skills/sdd*/SKILL.md` (Claude Code y OpenCode leen esa carpeta).
+  Los subagentes `sdd-analyst`, `sdd-architect`, `sdd-implementer` y `sdd-reviewer` existen en `.claude/agents/` y `.opencode/agents/`.
+- Skills de dominio (React, Zod, Tailwind, accesibilidad...) en `.agents/skills/`. Consúltalos al planificar o implementar en esas áreas.
+
 <!-- CODEGRAPH_START -->
 ## CodeGraph
 

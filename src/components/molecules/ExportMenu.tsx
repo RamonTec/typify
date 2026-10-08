@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Button } from '../atoms/Button';
 import { Download } from 'lucide-react';
+import type { OutputMode } from '../../services/converter';
 
 interface ExportMenuProps {
   tsOutput: string;
-  outputMode: string;
+  outputMode: OutputMode;
 }
 
 export const ExportMenu: React.FC<ExportMenuProps> = ({ tsOutput, outputMode }) => {
@@ -44,11 +45,11 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({ tsOutput, outputMode }) 
         variant="primary"
         size="sm"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Export"
-        title="Export"
+        aria-label="Exportar"
+        title="Exportar"
       >
         <Download className="h-4 w-4" />
-        <span className="ml-2">Export</span>
+        <span className="ml-2">Exportar</span>
       </Button>
 
       {isOpen && (
@@ -58,13 +59,13 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({ tsOutput, outputMode }) 
               onClick={handleCopyToClipboard}
               className="w-full text-left px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 rounded-md dark:text-slate-300 dark:hover:bg-slate-700"
             >
-              Copy to Clipboard
+              Copiar al portapapeles
             </button>
             <button
               onClick={handleDownload}
               className="w-full text-left px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 rounded-md dark:text-slate-300 dark:hover:bg-slate-700"
             >
-              Download as {outputMode === 'mermaid' ? '.mmd' : '.ts'}
+              Descargar como {outputMode === 'mermaid' ? '.mmd' : '.ts'}
             </button>
           </div>
         </div>
